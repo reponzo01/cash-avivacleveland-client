@@ -34,6 +34,7 @@ const isPasswordVisible = ref(false)
       <VCardItem class="justify-center">
         <template #prepend>
           <div class="d-flex">
+            <!-- eslint-disable vue/no-v-html -->
             <div v-html="logo" />
           </div>
         </template>
