@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useTheme } from 'vuetify'
 import upgradeBannerDark from '@/assets/images/pro/upgrade-banner-dark.png'
 import upgradeBannerLight from '@/assets/images/pro/upgrade-banner-light.png'
 import logo from '@/assets/logo.svg?raw'
 import { VerticalNavLink, VerticalNavSectionTitle } from '@layouts'
+import { useTheme } from 'vuetify'
 
 const vuetifyTheme = useTheme()
 const upgradeBanner = computed(() => {
@@ -62,7 +62,6 @@ const upgradeBanner = computed(() => {
       :item="{
         title: 'Register',
         to: 'register',
-        target: '_blank',
         icon: { icon: 'mdi-account-plus-outline' },
       }"
     />
