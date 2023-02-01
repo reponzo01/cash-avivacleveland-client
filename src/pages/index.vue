@@ -3,11 +3,27 @@ import misc404 from '@/assets/images/pages/404.png';
 import miscMaskDark from '@/assets/images/pages/misc-mask-dark.png';
 import miscMaskLight from '@/assets/images/pages/misc-mask-light.png';
 import tree from '@/assets/images/pages/tree.png';
+import axios from 'axios';
 import { useTheme } from 'vuetify';
 
 const vuetifyTheme = useTheme();
 const authThemeMask = computed(() => {
   return vuetifyTheme.global.name.value === 'light' ? miscMaskLight : miscMaskDark;
+});
+
+const router = useRouter();
+
+onMounted(() => {
+  axios
+    .get('authenticated')
+    .then(response => {
+      if (response.status === 200) {
+        router.push({
+          name: 'dashboard',
+        });
+      }
+    })
+    .catch(err => {});
 });
 </script>
 

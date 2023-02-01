@@ -43,8 +43,8 @@ const upgradeBanner = computed(() => {
     />
     <VerticalNavLink
       :item="{
-        title: 'Account Settings',
-        to: 'account-settings',
+        title: 'Settings',
+        to: 'settings',
         icon: { icon: 'mdi-account-cog-outline' },
       }"
     />

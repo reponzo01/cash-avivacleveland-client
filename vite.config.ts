@@ -1,13 +1,13 @@
-import { fileURLToPath } from 'url'
-import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import DefineOptions from 'unplugin-vue-define-options/vite'
-import { defineConfig } from 'vite'
-import Pages from 'vite-plugin-pages'
-import Layouts from 'vite-plugin-vue-layouts'
-import vuetify from 'vite-plugin-vuetify'
+import vue from '@vitejs/plugin-vue';
+import vueJsx from '@vitejs/plugin-vue-jsx';
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import DefineOptions from 'unplugin-vue-define-options/vite';
+import { fileURLToPath } from 'url';
+import { defineConfig } from 'vite';
+import Pages from 'vite-plugin-pages';
+import Layouts from 'vite-plugin-vue-layouts';
+import vuetify from 'vite-plugin-vuetify';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -41,7 +41,7 @@ export default defineConfig({
       '@layouts': fileURLToPath(new URL('./src/@layouts', import.meta.url)),
       '@configured-variables': fileURLToPath(new URL('./src/styles/variables/_template.scss', import.meta.url)),
       '@axios': fileURLToPath(new URL('./src/plugins/axios', import.meta.url)),
-      'apexcharts': fileURLToPath(new URL('node_modules/apexcharts-clevision', import.meta.url)),
+      apexcharts: fileURLToPath(new URL('node_modules/apexcharts-clevision', import.meta.url)),
     },
   },
   build: {
@@ -49,8 +49,30 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['vuetify'],
-    entries: [
-      './src/**/*.vue',
-    ],
+    entries: ['./src/**/*.vue'],
   },
-})
+  server: {
+    proxy: {
+      '/authenticated': {
+        target: 'http://localhost:3080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/logout': {
+        target: 'http://localhost:3080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/login': {
+        target: 'http://localhost:3080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/users': {
+        target: 'http://localhost:3080',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
+});

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { Anchor } from 'vuetify/lib/components'
-import avatar1 from '@/assets/images/avatars/avatar-1.png'
+import User from '@/models/user';
+import axios from 'axios';
+import type { Anchor } from 'vuetify/lib/components';
 
 const avatarBadgeProps = {
   dot: true,
@@ -9,17 +10,42 @@ const avatarBadgeProps = {
   offsetY: 3,
   color: 'success',
   bordered: true,
-}
+};
+
+const user = ref<User>({ avatarUrl: '', email: '', id: -1, name: '', username: '' });
+
+onBeforeMount(() => {
+  let userString = localStorage.getItem('user');
+  if (userString == null) {
+    // TODO: Consider making a REST util for the user interface and its methods
+    axios
+      .get('users/me')
+      .then(response => {
+        if (response.status == 200) {
+          user.value = <User>response.data;
+          localStorage.setItem('user', JSON.stringify(user.value));
+        }
+      })
+      .catch(err => {});
+  } else {
+    user.value = <User>JSON.parse(userString);
+  }
+});
+
+const handleLogout = () => {
+  localStorage.removeItem('user');
+  window.location.replace('logout');
+};
 </script>
 
 <template>
   <VBadge v-bind="avatarBadgeProps">
     <VAvatar
-      style="cursor: pointer;"
+      style="cursor: pointer"
       color="primary"
       variant="tonal"
     >
-      <VImg :src="avatar1" />
+      <VImg :src="user.avatarUrl" />
 
       <!-- SECTION Menu -->
       <VMenu
@@ -39,37 +65,20 @@ const avatarBadgeProps = {
                     size="40"
                     variant="tonal"
                   >
-                    <VImg :src="avatar1" />
+                    <VImg :src="user.avatarUrl" />
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
             </template>
 
-            <VListItemTitle class="font-weight-semibold">
-              John Doe
-            </VListItemTitle>
-            <VListItemSubtitle class="text-disabled">
-              Admin
-            </VListItemSubtitle>
+            <VListItemTitle class="font-weight-semibold"> {{ user?.name }} </VListItemTitle>
+            <VListItemSubtitle class="text-disabled"> Admin </VListItemSubtitle>
           </VListItem>
 
           <VDivider class="my-2" />
 
-          <!-- 👉 Profile -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="mdi-account-outline"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Profile</VListItemTitle>
-          </VListItem>
-
           <!-- 👉 Settings -->
-          <VListItem link>
+          <VListItem to="/settings">
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -81,37 +90,11 @@ const avatarBadgeProps = {
             <VListItemTitle>Settings</VListItemTitle>
           </VListItem>
 
-          <!-- 👉 Pricing -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="mdi-currency-usd"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Pricing</VListItemTitle>
-          </VListItem>
-
-          <!-- 👉 FAQ -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="mdi-help-circle-outline"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>FAQ</VListItemTitle>
-          </VListItem>
-
           <!-- Divider -->
           <VDivider class="my-2" />
 
           <!-- 👉 Logout -->
-          <VListItem to="/login">
+          <VListItem @click="handleLogout">
             <template #prepend>
               <VIcon
                 class="me-2"
