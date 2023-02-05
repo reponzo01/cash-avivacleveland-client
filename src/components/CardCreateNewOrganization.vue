@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const props = defineProps<{ title: string }>();
 </script>
 
 <template>
@@ -21,7 +22,7 @@
             />
           </VAvatar>
 
-          <h6 class="text-h6">No Organizations Found!</h6>
+          <h6 class="text-h6">{{ props.title }}</h6>
         </VCardText>
 
         <slot>

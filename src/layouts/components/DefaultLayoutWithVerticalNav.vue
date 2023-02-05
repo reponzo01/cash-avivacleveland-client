@@ -8,7 +8,7 @@ import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue';
 import UserProfile from '@/layouts/components/UserProfile.vue';
 
 // Organizations check
-import CardNoOrganizationsFound from '@/components/CardNoOrganizationsFound.vue';
+import CardCreateNewOrganization from '@/components/CardCreateNewOrganization.vue';
 import Organization from '@/models/organization';
 import { useOrganizationStore } from '@/stores/OrganizationStore';
 
@@ -74,7 +74,10 @@ onMounted(async () => {
 
     <!-- 👉 Pages -->
     <div class="layout-page-content">
-      <CardNoOrganizationsFound v-if="showNoOrganizationsScreen" />
+      <CardCreateNewOrganization
+        title="No organizations found!"
+        v-if="showNoOrganizationsScreen"
+      />
       <RouterView
         :organizations="organizations"
         v-else

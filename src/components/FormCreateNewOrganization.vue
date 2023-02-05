@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import { useOrganizationStore } from '@/stores/OrganizationStore';
 import { VForm } from 'vuetify/components';
+import DialogError from './DialogError.vue';
 
 const organizationStore = useOrganizationStore();
+
+const props = defineProps<{ showCancelButton: boolean; closeDialog: Function | null }>();
 
 const valid = ref(false);
 const name = ref('');
@@ -16,7 +19,7 @@ const validateNameField = [
   (v: string) => (!nameExistsInStore(v)) || 'This organization name already exists',
 ];
 const validateDescriptionField = [
-  (v: string) => !!v || v.length < 255 || 'Please enter a description less than 255 characters',
+  (v: string) => !v || (v && v.length < 255) || 'Please enter a description less than 255 characters',
 ];
 
 const nameExistsInStore = (name: string): boolean => {
@@ -39,6 +42,8 @@ const submitForm = async () => {
     errorMessage.value = organizationStore.errorMessage;
     if (errorMessage.value.length) {
       showErrorDialog();
+    } else if (props.showCancelButton && props.closeDialog) {
+      props.closeDialog();
     }
     form.value?.reset();
   }
@@ -78,10 +83,10 @@ const closeErrorDialog = () => {
       </VCol>
 
       <VCol
-        cols="12"
-        class="d-flex gap-4"
+        cols="6"
+        class="d-flex gap-4 justify-start"
       >
-        <VBtn type="submit"> Create </VBtn>
+        <VBtn type="submit" color="primary"> Create </VBtn>
 
         <VBtn
           type="reset"
@@ -90,44 +95,27 @@ const closeErrorDialog = () => {
         >
           Reset
         </VBtn>
+      </VCol>
+
+      <VCol
+        cols="6"
+        class="d-flex gap-4 justify-end"
+        v-if="props.showCancelButton"
+      >
 
         <VBtn
-          @click="showErrorDialog"
           color="secondary"
           variant="tonal"
+          @click="props.closeDialog"
         >
-          Modal
+          Cancel
         </VBtn>
       </VCol>
     </VRow>
   </VForm>
-  <!-- TODO: Make this a reusable component -->
-  <VDialog
-    v-model="errorDialog"
-    width="500"
-  >
-    <VCard color="#F44336">
-      <VCardItem>
-        <template #prepend>
-          <VIcon
-            size="1.9rem"
-            color="white"
-            icon="mdi-alert"
-          />
-        </template>
-        <VCardTitle class="text-white"> Error! </VCardTitle>
-      </VCardItem>
-
-      <VCardText class="text-white"> {{ errorMessage }} </VCardText>
-      <VCardActions>
-        <VSpacer></VSpacer>
-        <VBtn
-          color="white"
-          @click="closeErrorDialog"
-        >
-          Close
-        </VBtn>
-      </VCardActions>
-    </VCard>
-  </VDialog>
+  <DialogError
+    :errorDialog="errorDialog"
+    :errorMessage="errorMessage"
+    :closeErrorDialog="closeErrorDialog"
+  />
 </template>

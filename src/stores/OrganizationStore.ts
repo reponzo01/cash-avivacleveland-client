@@ -26,9 +26,6 @@ export const useOrganizationStore = defineStore('organizationStore', {
     }
   },
   actions: {
-    changeMyStore(newName: string) {
-      //this.organizationName = newName;
-    },
     async addNewOrganization(name: string, description: string) {
       this.errorMessage = '';
       try {
@@ -41,6 +38,23 @@ export const useOrganizationStore = defineStore('organizationStore', {
         const res = await axios.post('/api/organizations', newOrganization);
         if (res.status == 201) {
           this.organizations.push(<Organization>res.data);
+        }
+      } catch (err: any) {
+        this.errorMessage = err.response.data;
+      }
+    },
+
+    async deleteOrganization(id: number) {
+      this.errorMessage = '';
+      try {
+        const res = await axios.delete(`/api/organizations/${id}`);
+        if (res.status == 204) {
+          const indexToRemove = this.organizations.findIndex((el) => {
+            return el.id == id;
+          });
+          if (indexToRemove !== -1) {
+            this.organizations.splice(indexToRemove, 1);
+          }
         }
       } catch (err: any) {
         this.errorMessage = err.response.data;
