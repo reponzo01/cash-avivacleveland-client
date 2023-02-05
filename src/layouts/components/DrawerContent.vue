@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import upgradeBannerDark from '@/assets/images/pro/upgrade-banner-dark.png'
-import upgradeBannerLight from '@/assets/images/pro/upgrade-banner-light.png'
-import logo from '@/assets/logo.svg?raw'
-import { VerticalNavLink, VerticalNavSectionTitle } from '@layouts'
-import { useTheme } from 'vuetify'
+import upgradeBannerDark from '@/assets/images/pro/upgrade-banner-dark.png';
+import upgradeBannerLight from '@/assets/images/pro/upgrade-banner-light.png';
+import logo from '@/assets/logo.svg?raw';
+import { VerticalNavLink, VerticalNavSectionTitle } from '@layouts';
+import { useTheme } from 'vuetify';
 
-const vuetifyTheme = useTheme()
+const vuetifyTheme = useTheme();
 const upgradeBanner = computed(() => {
-  return vuetifyTheme.global.name.value === 'light'
-    ? upgradeBannerLight
-    : upgradeBannerDark
-})
+  return vuetifyTheme.global.name.value === 'light' ? upgradeBannerLight : upgradeBannerDark;
+});
 </script>
 
 <template>
@@ -25,9 +23,7 @@ const upgradeBanner = computed(() => {
       <div v-html="logo" />
 
       <Transition name="vertical-nav-app-title">
-        <h1 class="font-weight-semibold leading-normal text-xl text-uppercase">
-          Materio
-        </h1>
+        <h1 class="font-weight-semibold leading-normal text-xl text-uppercase">Materio</h1>
       </Transition>
     </RouterLink>
   </div>
@@ -48,6 +44,39 @@ const upgradeBanner = computed(() => {
         icon: { icon: 'mdi-account-cog-outline' },
       }"
     />
+
+    <!-- 👉 Organizations -->
+    <VerticalNavSectionTitle :item="{ heading: 'Organizations' }" />
+    <VerticalNavLink
+      :item="{
+        title: 'Organizations',
+        to: 'organizations',
+        icon: { icon: 'mdi-home-city-outline' },
+      }"
+    />
+    <VerticalNavLink
+      :item="{
+        title: 'Campuses',
+        to: 'campuses',
+        icon: { icon: 'mdi-home-group' },
+      }"
+    />
+    <VerticalNavLink
+      :item="{
+        title: 'People',
+        to: 'people',
+        icon: { icon: 'mdi-account-multiple-outline' },
+      }"
+    />
+    <VerticalNavLink
+      :item="{
+        title: 'Integrations',
+        to: { path: '/integrations' },
+        target: '_blank',
+        icon: { icon: 'mdi-connection' },
+      }"
+    />
+
     <!-- 👉 Pages -->
     <VerticalNavSectionTitle :item="{ heading: 'Pages' }" />
     <VerticalNavLink
@@ -115,21 +144,6 @@ const upgradeBanner = computed(() => {
       }"
     />
   </ul>
-
-  <!-- 👉 illustration -->
-  <a
-    href="https://themeselection.com/item/materio-vuetify-vuejs-admin-template"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <img
-      :src="upgradeBanner"
-      alt="upgrade-banner"
-      transition="scale-transition"
-      class="upgrade-banner mx-auto"
-      style="max-width: 230px"
-    >
-  </a>
 </template>
 
 <style lang="scss">

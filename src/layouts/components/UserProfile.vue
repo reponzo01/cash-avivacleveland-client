@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import User from '@/models/user';
 import axios from 'axios';
-import type { Anchor } from 'vuetify/lib/components';
 
 const avatarBadgeProps = {
   dot: true,
-  location: 'bottom right' as Anchor,
   offsetX: 3,
   offsetY: 3,
   color: 'success',

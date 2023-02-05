@@ -1,11 +1,29 @@
 <script lang="ts" setup>
-import DrawerContent from './DrawerContent.vue'
-import { VerticalNavLayout } from '@layouts'
+import { VerticalNavLayout } from '@layouts';
+import DrawerContent from './DrawerContent.vue';
 
 // Components
-import Footer from '@/layouts/components/Footer.vue'
-import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
-import UserProfile from '@/layouts/components/UserProfile.vue'
+import Footer from '@/layouts/components/Footer.vue';
+import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue';
+import UserProfile from '@/layouts/components/UserProfile.vue';
+
+// Organizations check
+import CardNoOrganizationsFound from '@/components/CardNoOrganizationsFound.vue';
+import Organization from '@/models/organization';
+import { useOrganizationStore } from '@/stores/OrganizationStore';
+
+const organizationStore = useOrganizationStore();
+const organizations = ref<Organization[]>([]);
+
+const showNoOrganizationsScreen = computed(() => {
+  const requiresOrganization = useRouter().currentRoute.value.meta.requiresOrganization === true;
+  organizations.value = organizationStore.organizations;
+  return requiresOrganization && organizations.value.length === 0;
+});
+
+onMounted(async () => {
+  organizations.value = await organizationStore.getMyOrganizations;
+});
 </script>
 
 <template>
@@ -56,7 +74,11 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
 
     <!-- 👉 Pages -->
     <div class="layout-page-content">
-      <RouterView />
+      <CardNoOrganizationsFound v-if="showNoOrganizationsScreen" />
+      <RouterView
+        :organizations="organizations"
+        v-else
+      />
     </div>
 
     <!-- 👉 Footer -->
@@ -69,7 +91,7 @@ import UserProfile from '@/layouts/components/UserProfile.vue'
 <style lang="scss">
 .app-bar-search {
   .v-input__control {
-    width: 236px
+    width: 236px;
   }
 
   .v-field__outline__start {
